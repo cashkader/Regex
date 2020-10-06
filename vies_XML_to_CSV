@@ -1,0 +1,14 @@
+import os, re, csv
+
+os.chdir(r'C:\Users\lstsuser03\Documents\My Python Projects')
+
+with open('VIES_07_2020.txt', 'r') as file:
+    data = file.read().replace('\n', '')
+
+vies = re.findall(r"""country="(\w\w)">(\w+)</mof:vat-number><mof:supplies-amount /><mof:triangle-transactions-amount /><mof:services-amount>(\d+)<""",data)
+
+with open('vies.csv', 'w') as f:
+    writer = csv.writer(f , lineterminator='\n')
+    for tup in vies:
+        writer.writerow(tup)
+

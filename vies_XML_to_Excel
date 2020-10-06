@@ -1,0 +1,26 @@
+import os, re, glob, pandas as pd
+
+path = r'C:\Users\lstsuser03\Documents\My Python Projects\XML files'
+os.chdir(path)
+files = glob.glob('./*.txt')
+
+vat_format = r"""country="(\w\w)">(\w+)</mof:vat-number><mof:supplies-amount /><mof:triangle-transactions-amount /><mof:services-amount>(\d+)<"""
+data = []
+vat = []
+i = 0
+
+for file in files:
+    with open(file, 'r') as file:
+        data.append(file.read().replace('\n', ''))
+    
+    vatlist = re.findall(vat_format,str(data[i]))
+    vat.append(vatlist)
+    
+    df = pd.DataFrame(vatlist)
+    with pd.ExcelWriter('VIES.xlsx', engine='openpyxl', mode='a') as writer:
+        df.to_excel(writer, sheet_name = str(i+1), index=False, header=None)
+        writer.save()
+        writer.close()
+    
+    i += 1
+
